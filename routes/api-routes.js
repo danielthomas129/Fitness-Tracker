@@ -33,6 +33,16 @@ module.exports = function(app) {
 
     });
 
+    app.get("/api/workouts", (req, res) => {
+    Workout.find({}).then(data => res.json(data))
+        .catch(err => {
+            console.log("error", err);
+
+            res.json(err);
+
+          });
+
+    });   
     app.get("/api/workouts/range", (req, res) => {
     Workout.find({})
         .sort({ date: -1 })
