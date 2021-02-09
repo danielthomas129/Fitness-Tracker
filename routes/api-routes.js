@@ -1,8 +1,8 @@
 const Workout = require("../models/workout.js");
 
 module.exports = function(app) {
-    app.post("/api/workout", ({ body }, res) => {
-    Workout.create(body)
+    app.post("/api/workouts", (req, res) => {
+    Workout.create({})
         .then(dbWorkout => {
         res.json(dbWorkout);
         })
@@ -11,7 +11,7 @@ module.exports = function(app) {
         });
     });
 
-    app.post("/api/workout/bulk", ({ body }, res) => {
+    app.post("/api/workouts/bulk", (req, res) => {
     Workout.insertMany(body)
         .then(dbWorkout => {
         res.json(dbWorkout);
@@ -19,6 +19,18 @@ module.exports = function(app) {
         .catch(err => {
         res.status(400).json(err);
         });
+    });
+    app.put("/api/workouts/:id", (req, res) => {
+    Workout.findByIdAndUpdate(req.params.id,
+     {$push: {exercises: req.body}},
+    {new: true, runValidators: true})   
+        .then(data => res.json(data))
+        .catch(err => {
+        console.log("error", err);
+        res.json(err);
+
+          });
+
     });
 
     app.get("/api/workouts/range", (req, res) => {
